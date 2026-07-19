@@ -76,8 +76,8 @@ fbq('track', 'PageView');
   <div class="card">
     <div class="verify"><i class="fas fa-check-circle"></i> verified learning community</div>
     <h2>WAY 2 LABH</h2>
-    <a class="btn" id="telegramBtn" href="https://t.me/+-cxs4Hr4E7gxYmI9" rel="noopener noreferrer" onclick="trackAndRedirect(event)">
-      <i class="fab fa-telegram"></i> JOIN FREE LEARNING COMMUNITY <i class="fas fa-arrow-right"></i>
+    <a class="btn" id="telegramBtn" href="https://t.me/+-cxs4Hr4E7gxYmI9" rel="noopener noreferrer">
+    <i class="fab fa-telegram"></i> JOIN FREE LEARNING COMMUNITY <i class="fas fa-arrow-right"></i>
     </a>
     <div class="stats">
     <div>⭐ <span>10,000+ Already Learned :</span> Start Your Skills learning Today! Open Your Demat Account in Just a Few Minutes</div>
@@ -120,11 +120,11 @@ fbq('track', 'PageView');
 </div>
 
 <div style="position:fixed;bottom:0;left:0;width:100%;padding:14px 16px;background:rgba(0,0,0,.15);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);display:flex;justify-content:center;z-index:999;">
-  <a href="https://t.me/+-cxs4Hr4E7gxYmI9" onclick="trackAndRedirect(event)" style="position:relative;width:100%;max-width:460px;overflow:hidden;background:linear-gradient(135deg, #db00c9, #dd610e);padding:15px 20px;border-radius:16px;display:flex;align-items:center;justify-content:center;gap:10px;text-decoration:none;color:#ffffff;font-weight:800;font-size:15.5px;box-shadow:0 12px 30px rgba(0,0,0,.35);animation:fixedCtaPulse 2.2s infinite;">
-    <span style="position:absolute;top:0;left:-120%;width:80%;height:100%;background:linear-gradient(90deg,transparent,rgba(255,255,255,.35),transparent);transform:skewX(-20deg);animation:fixedCtaShine 3s infinite;"></span>
-    <i class="fab fa-telegram" style="font-size:18px;position:relative;z-index:1;"></i>
-    <span style="position:relative;z-index:1;">JOIN FREE LEARNING COMMUNITY</span>
-  </a>
+    <a id="stickyTelegramBtn" href="https://t.me/+-cxs4Hr4E7gxYmI9" style="position:relative;width:100%;max-width:460px;overflow:hidden;background:linear-gradient(135deg, #db00c9, #dd610e);padding:15px 20px;border-radius:16px;display:flex;align-items:center;justify-content:center;gap:10px;text-decoration:none;color:#ffffff;font-weight:800;font-size:15.5px;box-shadow:0 12px 30px rgba(0,0,0,.35);animation:fixedCtaPulse 2.2s infinite;">
+        <span style="position:absolute;top:0;left:-120%;width:80%;height:100%;background:linear-gradient(90deg,transparent,rgba(255,255,255,.35),transparent);transform:skewX(-20deg);animation:fixedCtaShine 3s infinite;"></span>
+        <i class="fab fa-telegram" style="font-size:18px;position:relative;z-index:1;"></i>
+        <span style="position:relative;z-index:1;">JOIN FREE LEARNING COMMUNITY</span>
+    </a>
 </div>
 <style>@keyframes fixedCtaShine{100%{left:140%;}}@keyframes fixedCtaPulse{0%,100%{transform:scale(1);}50%{transform:scale(1.015);}}</style>
 <div style="height:88px;"></div>
@@ -133,14 +133,9 @@ fbq('track', 'PageView');
   const TELEGRAM_URL = "https://t.me/+-cxs4Hr4E7gxYmI9";
   let redirected = false;
 
-  // FIX: now takes the click event, reads the href from it,
-  // and both onclick attributes share this single working handler.
-  function trackAndRedirect(e) {
+  function trackAndRedirect(link) {
     if (redirected) return;
     redirected = true;
-    if (e && e.preventDefault) e.preventDefault();
-
-    const link = (e && e.currentTarget && e.currentTarget.href) || TELEGRAM_URL;
 
     if (typeof fbq !== 'undefined') {
       fbq('track', 'Lead', {
@@ -158,24 +153,19 @@ fbq('track', 'PageView');
     }, 500);
   }
 
-  // NOTE: removed the duplicate addEventListener on #telegramBtn —
-  // it was conflicting with the inline onclick and blocking redirects
-  // because of the `redirected` guard firing first with a bad value.
+  document.getElementById("telegramBtn").addEventListener("click", function (e) {
+    e.preventDefault();
+    trackAndRedirect(this.href);
+  });
 
-  // FIX: countdown now targets the correct element (#countTxt) and
-  // actually renders/updates the "seconds remaining" text each tick.
   let time = 30;
-  const counterEl = document.getElementById("countTxt");
-  function renderCountdown() {
-    if (counterEl) counterEl.innerText = `Will be redirecting in ${time} seconds....`;
-  }
-  renderCountdown();
+  const counter = document.getElementById("count");
   const countdown = setInterval(() => {
     time--;
-    renderCountdown();
+    if (counter) counter.innerText = time;
     if (time <= 0) {
       clearInterval(countdown);
-      trackAndRedirect({ currentTarget: { href: TELEGRAM_URL }, preventDefault: () => {} });
+      trackAndRedirect(TELEGRAM_URL);
     }
   }, 1000);
 </script>
