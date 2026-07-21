@@ -286,54 +286,48 @@ FREE Community Join करें
 </div>
 
 <script>
-  const TELEGRAM_URL = "https://t.me/+-cxs4Hr4E7gxYmI9";
-  let redirected = false;
-
-  function trackAndRedirect(link) {
-    if (redirected) return;
-    redirected = true;
-
-    if (typeof fbq !== 'undefined') {
-      fbq('track', 'Lead', {
-        content_name: 'Telegram Community',
-        button_click: true
-      }, {
-        eventID: 'telegram_subscribe_' + Date.now()
-      });
-    } else {
-      console.warn("fbq is not defined. Tracking skipped.");
-    }
-
-    setTimeout(() => {
-      window.location.href = link;
-    }, 500);
-  }
-
-  // WAIT FOR THE DOM TO BE FULLY LOADED
-  document.addEventListener("DOMContentLoaded", function () {
-    const telegramBtn = document.getElementById("telegramBtn");
-    
-    // Add a safety check to make sure the element actually exists
-    if (telegramBtn) {
-      telegramBtn.addEventListener("click", function (e) {
-        e.preventDefault();
-        trackAndRedirect(this.href);
-      });
-    } else {
-      console.error("Error: Element with ID 'telegramBtn' was not found in the HTML.");
-    }
-
+    // Countdown Timer and Event Tracking Logic
     let time = 30;
-    const counter = document.getElementById("count");
-    const countdown = setInterval(() => {
-      time--;
-      if (counter) counter.innerText = time;
-      if (time <= 0) {
-        clearInterval(countdown);
-        trackAndRedirect(TELEGRAM_URL);
-      }
+    let counter = document.getElementById("count");
+
+    // Telegram link
+    const TELEGRAM_URL = "https://t.me/+-cxs4Hr4E7gxYmI9"; 
+
+    // Handle button click with tracking
+    document.getElementById("telegramBtn").addEventListener("click", function(e){
+        e.preventDefault();
+        const telegramLink = this.href;
+
+        // Meta Pixel tracking: Subscribe event
+        if (typeof fbq !== 'undefined') {
+            fbq('track','subscribe',{
+                content_name:'Telegram Community',
+                button_click:true
+            },{
+                eventID:'telegram_subscribe_'+Date.now()
+            });
+        } else {
+            console.warn("fbq is not defined. Tracking skipped.");
+        }
+
+        // Delay redirect slightly for tracking to fire
+        setTimeout(()=>{
+            window.location.href = telegramLink;
+        }, 1000);
+    });
+
+    // Automatic countdown and redirect
+    const countdown = setInterval(()=>{
+        time--;
+        if (counter) {
+            counter.innerText = time;
+        }
+
+        if (time <= 0) {
+            clearInterval(countdown);
+            window.location.href = TELEGRAM_URL;
+        }
     }, 1000);
-  });
 </script>
 </body>
 </html>
