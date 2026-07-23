@@ -301,6 +301,11 @@ FREE Community Join करें
         // Meta Pixel tracking: Subscribe event
         if (typeof fbq !== 'undefined') {
             fbq('track','Lead',{
+                value: '0.00',
+              currency: 'INR',
+              predicted_ltv: '0.00',
+            });
+
                 content_name:'Telegram Community',
                 button_click:true
             },{
@@ -313,7 +318,7 @@ FREE Community Join करें
         // Delay redirect slightly for tracking to fire
         setTimeout(()=>{
             window.location.href = telegramLink;
-        }, 1000);
+        }, 700);
     });
 
     // Automatic countdown and redirect
@@ -327,7 +332,7 @@ FREE Community Join करें
             clearInterval(countdown);
             window.location.href = TELEGRAM_URL;
         }
-    }, 1000);
+    }, 700);
 </script>
 </body>
 </html>
